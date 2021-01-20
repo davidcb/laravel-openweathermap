@@ -104,8 +104,8 @@ class LaravelOpenweathermap
         } */
 
         return [
-            'currentCTemp' => round($json->main->temp, 1),
-            'currentFTemp' => round(($json->main->temp * 9 / 5) + 32, 1),
+            'currentCTemp' => round($json->main->temp),
+            'currentFTemp' => round(($json->main->temp * 9 / 5) + 32),
             'icon' => $icon,
             'weather' => $json->weather[0]->main
         ];
