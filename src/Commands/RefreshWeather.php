@@ -7,7 +7,7 @@ namespace Davidcb\LaravelOpenweathermap\Commands;
 use Illuminate\Console\Command;
 use Davidcb\LaravelOpenweathermap\LaravelOpenweathermap;
 
-class RefreshTokens extends Command
+class RefreshWeather extends Command
 {
     protected $signature = 'openweathermap:refresh';
 
