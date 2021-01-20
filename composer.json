@@ -9,12 +9,6 @@
         "email": "davidcouto@gmail.com"
       }
     ],
-    "require": {
-      "guzzlehttp/guzzle": "^6.5 | ^7.0"
-    },
-    "require-dev": {
-      "orchestra/testbench": "^3.9"
-    },
     "autoload": {
       "psr-4": {
         "Davidcb\\LaravelOpenweathermap\\": "src"
