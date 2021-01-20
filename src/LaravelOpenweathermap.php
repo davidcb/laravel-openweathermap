@@ -7,24 +7,10 @@ use Illuminate\Support\Facades\Cache;
 
 class LaravelOpenweathermap
 {
-    protected $app;
-    protected $apiKey;
-
-    public function cacheKey()
-    {
-        return 'openweathermap';
-    }
-
-    public function __construct($app)
-    {
-        $this->app = $app;
-        $this->apiKey = config('openweathermap.api_key');
-    }
-
     public static function getWeather()
     {
-        if (Cache::has($this->cacheKey())) {
-            $json = collect(Cache::get($this->cacheKey()));
+        if (Cache::has('openweathermap')) {
+            $json = Cache::get('openweathermap');
         } else {
             try {
                 $ch = curl_init();
@@ -44,13 +30,14 @@ class LaravelOpenweathermap
                 $result = curl_exec($ch);
                 curl_close($ch);
 
-                Cache::forever($this->cacheKey(), $result);
+                Cache::forever('openweathermap', $result);
 
-                $json = collect($result);
+                $json = $result;
             } catch (\Exception $e) {
-                $json = collect([]);
+                $json = null;
             }
         }
+        $json = json_decode($json);
 
         switch ($json->weather[0]->id) {
             case 300:
@@ -124,9 +111,9 @@ class LaravelOpenweathermap
         ];
     }
 
-    public function refresh()
+    public static function refresh()
     {
-        Cache::forget($this->cacheKey());
+        Cache::forget('openweathermap');
         return static::getWeather();
     }
 }
