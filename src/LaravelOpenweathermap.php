@@ -23,7 +23,34 @@ class LaravelOpenweathermap
 
     public static function getWeather()
     {
-        $json = $this->getWeatherJson();
+        if (Cache::has($this->cacheKey())) {
+            $json = collect(Cache::get($this->cacheKey()));
+        } else {
+            try {
+                $ch = curl_init();
+                curl_setopt_array($ch, array(
+                    CURLOPT_URL => 'http://api.openweathermap.org/data/2.5/weather?id=' . config('openweathermap.city_id') . '&APPID=' . config('openweathermap.api_key') . '&units=' . config('openweathermap.units'),
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => "",
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 30,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => "GET",
+                    CURLOPT_HTTPHEADER => array(
+                        "cache-control: no-cache",
+                        'accept: application/json'
+                    ),
+                ));
+                $result = curl_exec($ch);
+                curl_close($ch);
+
+                Cache::forever($this->cacheKey(), $result);
+
+                $json = collect($result);
+            } catch (\Exception $e) {
+                $json = collect([]);
+            }
+        }
 
         switch ($json->weather[0]->id) {
             case 300:
@@ -101,37 +128,5 @@ class LaravelOpenweathermap
     {
         Cache::forget($this->cacheKey());
         return static::getWeather();
-    }
-
-    private function getWeatherJson()
-    {
-        if (Cache::has($this->cacheKey())) {
-            return collect(Cache::get($this->cacheKey()));
-        }
-
-        try {
-            $ch = curl_init();
-            curl_setopt_array($ch, array(
-                CURLOPT_URL => 'http://api.openweathermap.org/data/2.5/weather?id=' . config('openweathermap.city_id') . '&APPID=' . config('openweathermap.api_key') . '&units=' . config('openweathermap.units'),
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_ENCODING => "",
-                CURLOPT_MAXREDIRS => 10,
-                CURLOPT_TIMEOUT => 30,
-                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                CURLOPT_CUSTOMREQUEST => "GET",
-                CURLOPT_HTTPHEADER => array(
-                    "cache-control: no-cache",
-                    'accept: application/json'
-                ),
-            ));
-            $result = curl_exec($ch);
-            curl_close($ch);
-
-            Cache::forever($this->cacheKey(), $result);
-
-            return collect($result);
-        } catch (\Exception $e) {
-            return collect([]);
-        }
     }
 }
