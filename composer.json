@@ -23,7 +23,10 @@
       "laravel": {
         "providers": [
           "Davidcb\\LaravelOpenweathermap\\LaravelOpenweathermapServiceProvider"
-        ]
+        ],
+        "aliases": {
+            "Openweathermap": "Davidcb\\LaravelOpenweathermap\\Facades\\LaravelOpenweathermap"
+        }
       }
     }
   }
