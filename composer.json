@@ -1,0 +1,36 @@
+{
+    "name": "davidcb/laravel-openweathermap",
+    "description": "Fetches the current weather from openweathermap.org",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+      {
+        "name": "David Couto",
+        "email": "davidcouto@gmail.com"
+      }
+    ],
+    "require": {
+      "guzzlehttp/guzzle": "^6.5 | ^7.0"
+    },
+    "require-dev": {
+      "orchestra/testbench": "^3.9"
+    },
+    "autoload": {
+      "psr-4": {
+        "Davidcb\\LaravelOpenweathermap\\": "src"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Davidcb\\LaravelOpenweathermap\\Tests\\": "tests"
+      }
+    },
+    "extra": {
+      "laravel": {
+        "providers": [
+          "Davidcb\\LaravelOpenweathermap\\LaravelOpenweathermapServiceProvider"
+        ]
+      }
+    }
+  }
+  
